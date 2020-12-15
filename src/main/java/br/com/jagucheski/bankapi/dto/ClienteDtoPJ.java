@@ -1,6 +1,6 @@
 package br.com.jagucheski.bankapi.dto;
 
-import br.com.jagucheski.bankapi.model.PessoaJuridica;
+import br.com.jagucheski.bankapi.model.ClientePessoaJuridica;
 
 public class ClienteDtoPJ {
 
@@ -11,10 +11,10 @@ public class ClienteDtoPJ {
 	public ClienteDtoPJ() {
 	}
 
-	public ClienteDtoPJ(PessoaJuridica pessoaJuridica) {
-		this.id = pessoaJuridica.getId();
-		this.razaoSocial = pessoaJuridica.getRazaoSocial();
-		this.CNPJ = pessoaJuridica.getCNPJ();
+	public ClienteDtoPJ(ClientePessoaJuridica clientePessoaJuridica) {
+		this.id = clientePessoaJuridica.getId();
+		this.razaoSocial = clientePessoaJuridica.getRazaoSocial();
+		this.CNPJ = clientePessoaJuridica.getCNPJ();
 	}
 
 	public Long getId() {

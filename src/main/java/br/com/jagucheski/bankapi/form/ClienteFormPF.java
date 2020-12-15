@@ -1,12 +1,20 @@
 package br.com.jagucheski.bankapi.form;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import br.com.jagucheski.bankapi.model.Cliente;
-import br.com.jagucheski.bankapi.model.PessoaFisica;
+import br.com.jagucheski.bankapi.model.ClientePessoaFisica;
 import br.com.jagucheski.bankapi.model.TipoPessoa;
 
 public class ClienteFormPF {
 
+	@NotBlank(message = "nome é obrigatório")
+	@Size(min = 5, max = 250)
 	private String nome;
+	
+	@NotBlank(message = "CPF é obrigatório")
+	@Size(min = 11, max = 20)
 	private String CPF;
 
 	public String getNome() {
@@ -25,9 +33,9 @@ public class ClienteFormPF {
 		CPF = cpf;
 	}
 
-	public PessoaFisica toPessoaFisica() {
+	public ClientePessoaFisica toPessoaFisica() {
 		Cliente cliente = new Cliente(TipoPessoa.PF);
-		PessoaFisica pf = new PessoaFisica(this.nome, this.CPF, cliente);
+		ClientePessoaFisica pf = new ClientePessoaFisica(this.nome, this.CPF, cliente);
 		return pf;
 	}
 

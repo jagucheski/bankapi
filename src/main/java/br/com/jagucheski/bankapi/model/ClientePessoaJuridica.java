@@ -11,11 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
-@Table(name = "pessoa_juridica")
-public class PessoaJuridica {
+@Table(name = "cliente_pessoa_juridica")
+public class ClientePessoaJuridica {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,15 +28,15 @@ public class PessoaJuridica {
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "cliente_id", referencedColumnName = "id")
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+	@JsonBackReference
 	private Cliente cliente;
 
-	public PessoaJuridica() {
+	public ClientePessoaJuridica() {
 	}
 
-	public PessoaJuridica(String razaoSocial, String cNPJ, Cliente cliente) {
+	public ClientePessoaJuridica(String razaoSocial, String cnpj, Cliente cliente) {
 		this.razaoSocial = razaoSocial;
-		CNPJ = cNPJ;
+		CNPJ = cnpj;
 		this.cliente = cliente;
 	}
 

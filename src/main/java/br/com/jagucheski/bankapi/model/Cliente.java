@@ -9,7 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Cliente {
@@ -20,18 +20,18 @@ public class Cliente {
 
 	@Enumerated(EnumType.STRING)
 	private TipoPessoa tipoPessoa;
-	
-	@OneToOne(mappedBy = "cliente" , fetch = FetchType.LAZY)
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-	private PessoaFisica pessoaFisica;
 
-	@OneToOne(mappedBy = "cliente" , fetch = FetchType.LAZY)
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-	private PessoaJuridica pessoaJuridica;
-	
+	@OneToOne(mappedBy = "cliente", fetch = FetchType.LAZY)
+	@JsonManagedReference
+	private ClientePessoaFisica clientePessoaFisica;
+
+	@OneToOne(mappedBy = "cliente", fetch = FetchType.LAZY)
+	@JsonManagedReference
+	private ClientePessoaJuridica clientePessoaJuridica;
+
 	public Cliente() {
 	}
-	
+
 	public Cliente(TipoPessoa tipoPessoa) {
 		this.tipoPessoa = tipoPessoa;
 	}
@@ -51,5 +51,21 @@ public class Cliente {
 	public void setTipoPessoa(TipoPessoa tipoPessoa) {
 		this.tipoPessoa = tipoPessoa;
 	}
-	
+
+	public ClientePessoaFisica getClientePessoaFisica() {
+		return clientePessoaFisica;
+	}
+
+	public void setClientePessoaFisica(ClientePessoaFisica clientePessoaFisica) {
+		this.clientePessoaFisica = clientePessoaFisica;
+	}
+
+	public ClientePessoaJuridica getClientePessoaJuridica() {
+		return clientePessoaJuridica;
+	}
+
+	public void setClientePessoaJuridica(ClientePessoaJuridica clientePessoaJuridica) {
+		this.clientePessoaJuridica = clientePessoaJuridica;
+	}
+
 }

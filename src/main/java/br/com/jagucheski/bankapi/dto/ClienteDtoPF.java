@@ -1,6 +1,6 @@
 package br.com.jagucheski.bankapi.dto;
 
-import br.com.jagucheski.bankapi.model.PessoaFisica;
+import br.com.jagucheski.bankapi.model.ClientePessoaFisica;
 
 public class ClienteDtoPF {
 
@@ -11,10 +11,10 @@ public class ClienteDtoPF {
 	public ClienteDtoPF() {
 	}
 
-	public ClienteDtoPF(PessoaFisica pessoaFisica) {
-		this.id = pessoaFisica.getId();
-		this.nome = pessoaFisica.getNome();
-		this.CPF = pessoaFisica.getCPF();
+	public ClienteDtoPF(ClientePessoaFisica clientePessoaFisica) {
+		this.id = clientePessoaFisica.getId();
+		this.nome = clientePessoaFisica.getNome();
+		this.CPF = clientePessoaFisica.getCPF();
 	}
 
 	public Long getId() {

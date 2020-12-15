@@ -26,6 +26,13 @@ public class Agencia {
 	@JsonIgnore
 	private List<ContaCorrente> contasCorrente = new ArrayList<ContaCorrente>();
 
+	public Agencia() {
+	}
+
+	public Agencia(int numero) {
+		this.numero = numero;
+	}
+
 	public Long getId() {
 		return id;
 	}

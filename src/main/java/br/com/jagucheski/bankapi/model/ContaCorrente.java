@@ -45,6 +45,16 @@ public class ContaCorrente {
 	@JsonIgnore
 	private List<Transacao> transacoes = new ArrayList<Transacao>();
 
+	public ContaCorrente() {
+	}
+
+	public ContaCorrente(String numeroConta, BigDecimal saldoAtual, Agencia agencia, Cliente cliente) {
+		this.numeroConta = numeroConta;
+		this.saldoAtual = saldoAtual;
+		this.agencia = agencia;
+		this.cliente = cliente;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -87,6 +97,14 @@ public class ContaCorrente {
 
 	public void setTransacoes(List<Transacao> transacoes) {
 		this.transacoes = transacoes;
+	}
+
+	public void depositar(BigDecimal deposito) {
+		this.saldoAtual =  this.saldoAtual.add(deposito);
+	}
+	
+	public void sacar(BigDecimal saque) {
+		this.saldoAtual =  this.saldoAtual.subtract(saque);
 	}
 
 }
