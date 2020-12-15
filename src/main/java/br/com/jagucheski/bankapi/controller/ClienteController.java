@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,7 @@ import br.com.jagucheski.bankapi.model.ClientePessoaJuridica;
 import br.com.jagucheski.bankapi.repository.ClientePessoaFisicaRepository;
 import br.com.jagucheski.bankapi.repository.ClientePessoaJuridicaRepository;
 import br.com.jagucheski.bankapi.repository.ClienteRepository;
+import br.com.jagucheski.bankapi.repository.ContaCorrenteRepository;
 
 @RestController
 @RequestMapping("cliente")
@@ -43,23 +45,23 @@ public class ClienteController {
 	
 	@Autowired
 	private ClientePessoaJuridicaRepository clientePJRepository;
+	
+	@Autowired
+	ContaCorrenteRepository contaCorrenteRepository;
 
 	@GetMapping("find")
 	public List<Cliente> findCliente() {
-		List<Cliente> ps = clienteRepository.findAll(); 
-		return ps;
+		return clienteRepository.findAll(); 
 	}
 
 	@GetMapping("findPF")
 	public List<ClientePessoaFisica> findClientePF() {
-		List<ClientePessoaFisica> pfs = clientePFRepository.findAll(); 
-		return pfs;
+		return clientePFRepository.findAll(); 
 	}
 
 	@GetMapping("findPJ")
 	public List<ClientePessoaJuridica> findClientePJ() {
-		List<ClientePessoaJuridica> pjs = clientePJRepository.findAll(); 
-		return pjs;
+		return clientePJRepository.findAll(); 
 	}
 
 	/**
@@ -118,6 +120,46 @@ public class ClienteController {
 		if (optional.isPresent()) {
 			ClientePessoaJuridica clientePJ = clientePutFormPJ.atualizaClientePessoaJuridica(id, clientePJRepository);
 			return ResponseEntity.ok(new ClienteDtoPJ(clientePJ));
+		}
+		return ResponseEntity.notFound().build();
+	}
+	
+	/**
+	 * 200: cliente pessoa fisica deletado
+	 * 400: caso id cliente nao encontrado
+	 * 409: caso cliente possua conta corrente vinculada
+	 * */
+	@DeleteMapping("deletarPF/{id}")
+	@Transactional
+	public ResponseEntity<?> deletarPF(@PathVariable Long id) {
+		Optional<ClientePessoaFisica> clientePf = clientePFRepository.findById(id);
+		if (clientePf.isPresent()) {
+			if (!contaCorrenteRepository.findByClienteClientePessoaFisicaId(clientePf.get().getId()).isPresent()) {
+				clientePFRepository.delete(clientePf.get());
+				return ResponseEntity.ok().build();
+			}else {
+				return ResponseEntity.status(409).build();
+			}
+		}
+		return ResponseEntity.notFound().build();
+	}
+	
+	/**
+	 * 200: cliente pessoa juridica deletado
+	 * 400: caso id cliente nao encontrado
+	 * 409: caso cliente possua conta corrente vinculada
+	 * */
+	@DeleteMapping("deletarPJ/{id}")
+	@Transactional
+	public ResponseEntity<?> deletarPJ(@PathVariable Long id) {
+		Optional<ClientePessoaJuridica> clientePJ = clientePJRepository.findById(id);
+		if (clientePJ.isPresent()) {
+			if (!contaCorrenteRepository.findByClienteClientePessoaJuridicaId(clientePJ.get().getId()).isPresent()) {
+				clientePJRepository.delete(clientePJ.get());
+				return ResponseEntity.ok().build();
+			}else {
+				return ResponseEntity.status(409).build();
+			}
 		}
 		return ResponseEntity.notFound().build();
 	}

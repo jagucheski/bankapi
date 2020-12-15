@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.jagucheski.bankapi.repository.ContaCorrenteRepository;
+
 @Entity
 public class Agencia {
 
@@ -55,6 +57,10 @@ public class Agencia {
 
 	public void setContasCorrente(List<ContaCorrente> contasCorrente) {
 		this.contasCorrente = contasCorrente;
+	}
+	
+	public boolean possuiContaCorrente(ContaCorrenteRepository contaCorrenteRepository) {
+		return contaCorrenteRepository.countByAgenciaNumero(this.getNumero()) > 0 ? true : false;
 	}
 
 }

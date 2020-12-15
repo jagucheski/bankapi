@@ -15,4 +15,11 @@ public interface ContaCorrenteRepository extends JpaRepository<ContaCorrente, Lo
 
 	Optional<ContaCorrenteDto> findByNumeroConta(String numero);
 
+	Optional<ContaCorrente> findByClienteClientePessoaFisicaId(Long idCliente);
+	
+	Optional<ContaCorrente> findByClienteClientePessoaJuridicaId(Long idCliente);
+
+	
+	 long countByAgenciaNumero(int numero);
+
 }

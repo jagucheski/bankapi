@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,14 +25,17 @@ import br.com.jagucheski.bankapi.dto.AgenciaDto;
 import br.com.jagucheski.bankapi.form.AgenciaForm;
 import br.com.jagucheski.bankapi.model.Agencia;
 import br.com.jagucheski.bankapi.repository.AgenciaRepository;
+import br.com.jagucheski.bankapi.repository.ContaCorrenteRepository;
 
 @RestController
 @RequestMapping("agencia")
 public class AgenciaController {
 
-
 	@Autowired
 	AgenciaRepository agenciaRepository;
+	
+	@Autowired
+	ContaCorrenteRepository contaCorrenteRepository;
 		
 	@GetMapping("find")
 	@ResponseBody
@@ -54,7 +58,7 @@ public class AgenciaController {
 		Agencia agencia = agenciaForm.toAgencia();
 		agenciaRepository.save(agencia);
 		
-		URI uri = uriBuilder.path("/agencia/{numero}").buildAndExpand(agencia.getId()).toUri();
+		URI uri = uriBuilder.path("/agencia/{id}").buildAndExpand(agencia.getId()).toUri();
 		return ResponseEntity.created(uri).body(new AgenciaDto(agencia));		
 	}
 	
@@ -78,4 +82,24 @@ public class AgenciaController {
 		}
 		return ResponseEntity.notFound().build();
 	}	
+	
+	/**
+	 * 200: agencia deletada
+	 * 409: caso agencia possui conta corrente vinculada
+	 * 400: caso id agencia nao encontrado
+	 * */
+	@DeleteMapping("deletar/{id}")
+	@Transactional
+	public ResponseEntity<?> deletar(@PathVariable Long id) {
+		Optional<Agencia> agencia = agenciaRepository.findById(id);
+		if (agencia.isPresent()) {
+			if (!agencia.get().possuiContaCorrente(contaCorrenteRepository)) {
+				agenciaRepository.delete(agencia.get());
+				return ResponseEntity.ok().build();
+			}else {
+				return ResponseEntity.status(409).build();
+			}
+		}
+		return ResponseEntity.notFound().build();
+	}
 }

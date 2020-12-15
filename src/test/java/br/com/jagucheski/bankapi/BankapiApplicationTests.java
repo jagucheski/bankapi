@@ -1,5 +1,6 @@
 package br.com.jagucheski.bankapi;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
@@ -32,6 +33,22 @@ class BankapiApplicationTests {
 		
 		assertTrue(conta.isPresent());
 		assertTrue(conta2.isPresent());
+	}
+	
+	@Test
+	void countContaCorrenteByAgencia() {
+		
+		int numeroAgencia = 3693;
+		int numeroAgencia2 = 1207;
+		int numeroAgencia3 = 12;
+		
+		Long a = contaCorrenteRepository.countByAgenciaNumero(numeroAgencia);
+		Long b = contaCorrenteRepository.countByAgenciaNumero(numeroAgencia2);
+		Long c = contaCorrenteRepository.countByAgenciaNumero(numeroAgencia3);
+		
+		assertEquals(3, a);
+		assertEquals(2, b);
+		assertEquals(0, c);
 	}
 	
 

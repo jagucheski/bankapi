@@ -3,6 +3,7 @@ package br.com.jagucheski.bankapi.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -26,6 +27,7 @@ public class Transacao {
 	private BigDecimal valor;
 
 	@Enumerated(EnumType.STRING)
+	@Column(name = "tipo_transacao")
 	private TipoTransacao tipoTransacao;
 
 	@ManyToOne(fetch = FetchType.LAZY)

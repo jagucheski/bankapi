@@ -2,8 +2,6 @@ package br.com.jagucheski.bankapi.controller;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -11,6 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.jagucheski.bankapi.dto.ExtratoDto;
 import br.com.jagucheski.bankapi.dto.TransacaoDto;
 import br.com.jagucheski.bankapi.form.TransacaoForm;
 import br.com.jagucheski.bankapi.model.ContaCorrente;
@@ -96,13 +96,23 @@ public class TransacaoController {
 
 	@GetMapping("extrato/{idContaCorrente}")
 	@Transactional
-	public List<Transacao> extrato(@PathVariable Long idContaCorrente) {
-		List<Transacao> transacoes = new ArrayList<Transacao>();
-		Optional<ContaCorrente> optional = contaCorrenteRepository.findById(idContaCorrente);
-		if (optional.isPresent()) {
-			transacoes =  transacaoRepository.findByContaCorrenteId(idContaCorrente);
+	public ResponseEntity<ExtratoDto> extrato(@PathVariable Long idContaCorrente) {
+		Optional<ContaCorrente> contaCorrenteOptional = contaCorrenteRepository.findById(idContaCorrente);
+		if (contaCorrenteOptional.isPresent()) {
+			ExtratoDto extrato = new ExtratoDto(contaCorrenteOptional.get(), transacaoRepository.findByContaCorrenteId(idContaCorrente));
+			return ResponseEntity.ok(extrato);
 		}
-		return transacoes;
+		return ResponseEntity.notFound().build();
 	}
 	
+	@DeleteMapping("deletar/{id}")
+	@Transactional
+	public ResponseEntity<?> deletar(@PathVariable Long id) {
+		Optional<Transacao> optional = transacaoRepository.findById(id);
+		if (optional.isPresent()) {
+			transacaoRepository.delete(optional.get());
+			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.notFound().build();
+	}
 }
